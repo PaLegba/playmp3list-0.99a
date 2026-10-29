@@ -1,0 +1,252 @@
+Version 0.99 - Friday, 29 May 2026
+=====================================
+Fixed a tons of bugs.
+Added utf8 support for both playlist, filenames and tags.
+Added new progressbar and control symbols.
+Re-colorized interface parts. 
+Removed autoconf scrap, replaced with just a Makefile.
+Tested with mpg123 version 1.33.3 on modern lace of alsa/oss/loopback.
+
+Version 0.95 - Sunday, 26 August 2001
+=====================================
+Fixed a #include typo that prevented compilation on some systems.
+Applied tag recoding patch to help with russian music.
+Fixed song elapsed time display bug.
+Tested with mpg123 version 0.59s (development).
+
+Version 0.94 - Thursday, 22 June 2000
+=====================================
+Previous directory gets hilighted when changing directories.
+The current song stays hilighted even if one changes into other dirs 
+and then back. Play is not interrupted.
+
+Version 0.93 - Wednesday, 3 May 2000
+====================================
+Hacked option handling to work with getopt. Now the ordering of arguments is a
+  little more flexible. I moved getopt to before load_rcfile, so I also had to
+  add a whole span of 'set' flags to ensure that the c/l options override the
+  rc file settings.
+Added command-line option for theme name and mpg123 parameters.
+Made panic handler handle any interrupt signal, and set up a trap for SIGINT, 
+  so it'll clean up when you press ^C or kill it.
+Fixed bug that caused program to incorrectly guess whether a song had ended
+  that appeared when buffering was used with mpg123. Now we remember when
+  we've tried to stop a song. If the frontend reports a stop and we didn't
+  cause it, assume the end of the song has been reached. The reason for the
+  error is mpg123 doesn't always report zero frames remaining at end of song.
+  I hope this works!
+
+Version 0.92 - Tuesday, 7 March 2000
+====================================
+
+Modified directory browsing code to work nicely with soft links - I replaced
+  the getcwd's with code to guess the new path.
+Fixed bug in playlist recognition routine that caused a crash on zero-length
+  first lines in candidate files.
+Undid some changes to main.cc - I stupidly tried to remove variable 's' in
+  version 0.91, but this broke the unshuffle behaviour. Don't fix it if it
+  ain't broke!
+Added a SIGSEGV handler to quit nicely if a Segmentation fault occurs.
+Added debug file support. It redirects anything written to stderr to a file,
+  ~/playmp3list.debug, if the -d option is used, otherwise stderr is redirected
+  to /dev/null.
+Improved (changed) frontend code to hopefully stop dead mpg123 processes from
+  becoming zombies. Who says programming isn't fun?
+Wrote a man page!
+Changed 'a' key to toggle alphabetisation, and to reload the current playlist
+  as well.
+Made alphabetisation work according to whichever entries are displayed in the
+  playlist - i.e. full filenames or beautified entries.
+Support for up to 10 user-configurable jumps added.
+Ability to renice mpg123 to any priority - set in rc file.
+Added key mapping ('i') for displaying the ID3v1 tag of the hilighted song
+  (if it has one).
+Added text_playlist_tail in rc file for setting color of the empty tail of a
+  playlist.
+Applied a small patch for proper re-drawing in Gnome terms.
+Applied a patch that lets you jump to the next song starting with the letter
+  that you press next.
+Made the stop function also kill the mpg123 process, thereby freeing the audio
+  device for other programs to use!
+Added option to use PCM or Master channels for setting volume.
+Added genre support in ID3 tag info display.
+Fixed bug in new jump to next song code.
+Applied patch to make fast-forwarding increase in speed with time. Should be
+  useful for really _big_ songs.
+
+Version 0.91 - Thursday, 17 February 2000
+=========================================
+
+Added startup PCM volume setting in rc file - comment out to not set volume.
+Added .list as a recognized playlist extension.
+Added slightly intelligent playlist recognition routine - checks the first
+  line of the file to see if it ends with the extension .mp3.
+Frontend now issues a STOP as well as a QUIT command on destruction.
+Stopped writing extra null characters to mpg123.
+Fixed nasty bug that caused a crash when no song had been selected.
+
+Version 0.9 - Friday, 11 February 2000
+======================================
+
+Changed program to use mpg123 for decoding. The mpegsound library is no longer
+  used or included. 'force to mono' and 'downfreq' options were removed, but
+  you can still achieve the same effect and more, by specifying additional
+  parameters to send to mpg123 - see the 'mpg123_params' setting in the rc file.
+* As this was a fairly _major_ operation, expect some bugs to have crept in.
+  Please report them for extermination.
+The interface responsiveness has improved DRAMATICALLY during the change to
+  mpg123, partly as a result of a little code taken from the version 2.0b17 of
+  'mp3blaster'.
+Applied a small patch to mpegsound library.
+Added .pls as a recognized playlist file extension.
+
+Version 0.8 - Monday, 7 February 2000
+=====================================
+
+Added brilliant new feature - .rc file support:
+  Modify key-mappings, change settings, edit and choose themes (colors)...
+  all in one human-readable file! Never need to use command-line options again!
+  Share your configuration masterpiece with all your friends ;-)
+  You can save your personal settings in a .playmp3list file in your home
+  directory and generic settings in a /etc/playmp3listrc file for all
+  other users - based on a suggestion from Hugues Marilleau.
+Changed the browser so that playlists can be browsed just like directories!
+  playlist files must have a standard extension - see the source code...
+  The playlist code got out of hand, so I had to do a major re-write, and
+  the structure has changed somewhat. The playlist now does chdir's and so
+  relative filenames should work properly now.
+Added 'virtual playlist' feature - just pass several filenames as arguments
+  and a playlist will be compiled from them!
+Added (slightly modified) ID3v1 tag extraction code plus a few other minor
+  patches.
+Made the interface redraw itself whenever it's window in X is resized.
+  Had to add some variables and functions to achieve this smoothly.
+Made ^L and ^R cause the interface to be redrawn. This will be helpful if another
+  app dumps something into the window, or the interface messes up for any reason.
+Made the playlist erase open lines below the last song to get rid of the help text
+  and other rubbish.
+Added alphabetization of directories, not just of files.
+Added support for MS-DOS text format playlist files.
+
+Version 0.71 - Friday, 3 December 1999
+======================================
+
+Made the 'Y' key behave like the 'Z' key, because German keyboards have these
+  two keys swapped.
+Added 'N' and 'M' as alternatives to the LEFT and RIGHT arrow keys for fast-
+  forwarding and rewinding.
+Made '/' jump to the root directory and '~' jump to the home directory ($HOME).
+Added an in-program help display that can be popped up with the '?' or 'H'
+  keys - thanks for the ideas, Arndt Schoenewald.
+
+
+Version 0.7 - Tuesday, 16 November 1999
+=======================================
+
+Fixed tiny bug in unshuffle behavior.
+Fixed bug in alphabetization code.
+Added directory play feature - if it fails to open the playlist file it will
+  try to open it as a directory, and then add all mp3 files inside.
+Moved playlist code out of the .h file into a .cc file.
+Added time remaining display option.
+Modified the playlist code a lot to allow directory browsing!
+  Now, if you start the program with a directory as parameter, you will be
+  able to browse around into different directories without leaving the
+  program.
+Allowed uninterrupted playing of current song while changing directories.
+Clear the screen on exit.
+Allowed uninterrupted playing of current song while alphabetizing.
+  The song will finish and wait for user selection though.
+The playlist will now scroll to the currently playing song so that it isn't
+  out of view.
+Modified coloring code in the interface to allow easier color scheming - now
+  you can edit one block of color/style settings for the whole interface.
+  Also fixed up mono screen support a bit and added a Midnight-commander style
+  color scheme - find it in interface.cc. Left the default colors unchanged.
+Show ellipses if playlist filename is too long.
+
+
+Version 0.6 - Wednesday, 15 September 1999
+==========================================
+
+Changed shuffle, prev and next behavior so that the repeat feature works
+properly - it's now a lot more 'Winamp'-ish
+Changed default colors.
+Set autorepeat to off by default.
+Changed alphabetization to stop playback and prompt for a file to start with.
+
+
+Version 0.5 - Tuesday, 14 September 1999
+=========================================
+
+Added colors to user interface.
+Fixed a shuffle bug in the playlist.
+Added optional displaying of full path in the playlist.
+Added "turn down" feature to reduce 'snap' sounds when starting a song.
+Added command-line option support.
+Added optional color support, set in playmp3list.h
+Improved interface responsiveness - clear input queue after each key read.
+Changed it so that autoplay and autoshuffle combined start playing at a random pos.
+Added auto displaying of full path.
+
+
+Version 0.4 - Friday, 10 September 1999
+=========================================
+
+Wow. This has come a long way. I added a `playlist' class to handle the loading,
+shuffling etc. operations that are required for the playlist. The class can
+now load a playlist (and strip the newline symbols off the filenames). It
+doesn't do any checking on the validity of the filenames or their contents,
+but shouldn't crash if a file does not exist or is corrupt. It'll move onto the
+next file in the list when it reaches the end, or hits an error.
+The `main' file was updated to handle the up/down arrows and the like, and the
+interface now has a method to draw the playlist in itself, with a highlighted
+bar over the currently _selected_ song. The playing song is not indicated on
+the list at all. So, the program can load a list, given as the only parameter,
+then receive keystrokes, which it uses to
+
+o move around on the playlist
+o affect the player object
+o toggle shuffle and repeat settings
+o update the interface whenever necessary
+
+A volume control feature was added! This affects the PCM volume only.
+Much, much more crap was cleaned up during this fateful day (Thursday)
+(and now Friday morning).
+
+The program runs very smoothly on my PC, a Pentium II 266. It uses about 1%
+of CPU (from `top'), which is comparable to mp3blaster's performance.
+
+
+Version 0.3 - Wednesday, 08 September 1999
+==========================================
+
+I pretty much finished the `player' class. I added a small piece of test code
+in the `main' file to load a single mp3 and play it till it reached the end.
+Success! It actually played, so this is a good sign.
+Many more changes were made...
+
+
+Version 0.2 - Tuesday, 07 September 1999
+========================================
+
+I resumed work today because I am on holiday! Yes, am one one of those freaks
+that actually *enjoys* coding. But then, you might be too. Why else would you
+be reading this?!?!?
+
+I finished the `interface' class to a good degree, and started serious work
+on the `player' class. Things are looking promising.
+
+
+Version 0.1 - Tuesday, 31 August 1999
+=====================================
+
+After 3 days of hacking, I have got the bleeding thing to compile with the
+`mpegsound' library. This has been a crash course in C compiling and
+`automake'. I removed the references to the `debug' function in the `mpegsound'
+lib, which Braam Avontuur added, but left the other changes intact. I have
+roughly declared the `interface' and `player' classes, which will be
+_the only_ classes if I can help it. I want to keep the program as small and
+simple as possible. The program currently does nothing more than display some
+info on screen to check that the interface class is working properly. No files
+have been played yet!

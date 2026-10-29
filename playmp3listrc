@@ -1,0 +1,184 @@
+# playmp3list V 0.92 configuration file.
+# File author: Paul Urban (urban@rucus.ru.ac.za)
+
+# You can modify key-mappings, change settings, edit and choose themes here.
+# Save this in your home directory as .playmp3listrc, or as /etc/playmp3listrc
+# for all users without a ~/.playmp3listrc file.
+# IMPORTANT: Don't delete and of the lines starting with '.' - it'll break!
+
+.KEY_MAPPINGS
+#=============================================
+# function		list of keys
+#=============================================
+previous_song		Z Y
+play_song		X
+pause_song		C
+stop_song		V
+next_song		B
+rewind_song		N
+fast_forward_song	M
+#up			
+#down			
+#home			
+#end			
+#page_up		
+#page_down		
+#play_selected		
+increase_volume		> . + =
+decrease_volume		< , - _
+toggle_shuffle		S
+toggle_repeat		R
+toggle_full_path	F
+toggle_time_remaining	T
+toggle_alpha		A
+jump_root		/
+jump_home		~
+#jump_updir		
+jump_user1		1
+jump_user2		2
+jump_user3		3
+jump_user4		4
+jump_user5		5
+jump_user6		6
+jump_user7		7
+jump_user8		8
+jump_user9		9
+jump_user0		0
+search			`
+show_ID3_tag		I
+help			? H
+#redraw			
+quit			Q
+
+.SETTINGS
+#=============================================
+# setting		value
+#=============================================
+auto_play		false
+auto_shuffle		false
+auto_repeat		false
+auto_alpha		true
+full_path		false
+time_remaining		false
+ID3v1			false
+
+# Specify additional parameters to send to mpg123
+mpg123_params		
+
+# Specify priority to re-nice mpg123 to
+mpg123_priority		0
+
+# Specify initial PCM audio volume
+#PCM_volume		100
+
+# Specify where the ten jump keys will take you
+# i.e. list one directory or playlist next to each setting below
+#jump_dir1		
+#jump_dir2		
+#jump_dir3		
+#jump_dir4		
+#jump_dir5		
+#jump_dir6		
+#jump_dir7		
+#jump_dir8		
+#jump_dir9		
+#jump_dir0		
+
+# Choose which theme below to use...
+theme			Legba
+
+.THEME Default
+#=============================================
+# screen element	fg	bg	style?
+# colors can be: black, red, green, yellow, blue, magenta, cyan or white
+# styles can be: normal, bold or reverse
+#=============================================
+plain			white	black
+borders			white	black	reverse
+text_normal		white	black
+text_active		green	black	bold
+song_normal		green	black	bold
+song_playing		white	black	bold
+song_hilighted		green	blue	bold
+song_playing_hilighted	white	blue	bold
+dir_normal		green	black
+dir_hilighted		green	blue
+text_help		yellow	black	bold
+text_playlist_tail	white	black	
+
+.THEME Ocean
+#=============================================
+plain			white	black
+borders			white	blue
+text_normal		white	blue
+text_active		yellow	blue	bold
+song_normal		white	blue
+song_playing		green	blue	bold
+song_hilighted		black	cyan
+song_playing_hilighted	green	cyan	bold
+dir_normal		white	blue	bold
+dir_hilighted		black	cyan
+text_help		yellow	blue	bold
+text_playlist_tail      white   blue
+
+.THEME Legba
+#=============================================
+plain			red	black	bold
+borders			cyan	black	bold
+text_normal		white	black
+text_active		yellow	green	bold
+song_normal		white	black
+song_playing		green	black
+song_hilighted		black	cyan
+song_playing_hilighted	yellow	green	bold
+dir_normal		white	black	bold
+dir_hilighted		black	cyan	bold
+text_help		cyan	blue	bold
+text_playlist_tail      white   black
+
+
+.THEME Fireball
+#=============================================
+plain                   white   black
+borders                 white   red
+text_normal             white   red
+text_active             yellow  red     bold
+song_normal             white   red
+song_playing            yellow  red     bold
+song_hilighted          black   cyan 
+song_playing_hilighted  yellow  cyan    bold
+dir_normal              white   red     bold
+dir_hilighted           black   cyan
+text_help               yellow  red     bold
+text_playlist_tail      white   red
+
+.THEME Classical
+# Author: Marcin Marszalek
+#=============================================
+plain                   white   black
+borders                 yellow  black   bold
+text_normal             yellow  yellow  bold
+text_active             white   yellow  bold
+song_normal             yellow  black
+song_playing            white   black   bold
+song_hilighted          yellow  yellow  bold
+song_playing_hilighted  white   yellow  bold
+dir_normal              white   black
+dir_hilighted           white   yellow  bold
+text_help               yellow  black   bold
+text_playlist_tail      white   black
+
+.THEME Mono
+#=============================================
+plain                   white   black
+borders                 white   black
+text_normal             white   black
+text_active             white   black   bold
+song_normal             white   black
+song_playing            white   black   bold
+song_hilighted          white   black   reverse
+song_playing_hilighted  black   black   reverse
+dir_normal              white   black
+dir_hilighted           white   black	reverse
+text_help               white	black   bold
+text_playlist_tail      white   black

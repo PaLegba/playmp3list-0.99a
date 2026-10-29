@@ -1,0 +1,109 @@
+Изменения playmp3list - 29 мая 2026
+====================================
+
+1. Управление громкостью (главное!)
+-----------------------------------
+Раньше громкость рулилась через ALSA-микшер (snd_mixer_open / snd_mixer_selem_set_playback_volume_all)
+с падением на OSS (/dev/mixer, ioctl SOUND_MIXER_WRITE_VOLUME).
+Это не работало в конфигурации с ALSA Loopback -> bridge -> виртуальный микшер -> выход,
+потому что:
+  - ALSA "default" (Loopback, card 0) не имеет элементов микшера
+  - OSS /dev/mixer не влияет на ALSA-аудио
+
+Решение: убрать весь ALSA/OSS код и отправлять VOLUME-команду напрямую в mpg123 через
+его remote-протокол. Команда:
+    VOLUME <percent>\n
+где percent - 0..100, float.
+
+Файлы:
+  frontend.cc + frontend.h - новый метод set_volume(int pct)
+  main.cc - up_volume() / down_volume() / set_volume() вызывают player->set_volume()
+
+2. Что удалено
+--------------
+Из frontend.cc:
+  - #include <alsa/asoundlib.h>
+  - open_mixer(), close_mixer(), get_volume()
+  - use_PCM, mixer_channel
+  - весь OSS-код (ioctl, SOUND_MIXER_WRITE_VOLUME, /dev/mixer)
+
+Из main.cc:
+  - Вся логика ALSA/OSS-микшера
+
+Из playmp3list.h:
+  - #define SOUNDCARD <sys/soundcard.h>
+  - #define MIXER_DEVICE "/dev/mixer"
+  - #define BOTH_CHANNELS 0x11
+  - #define RIGHT_CHANNEL 0x10
+  - #define LEFT_CHANNEL  0x01
+
+Из Makefile:
+  - CPUTWCHAR теперь переменная (по умолч. cputwchar_fix.cc, пусто для Linux)
+
+3. Исправление двойного set_volume
+----------------------------------
+В обработчиках клавиш volume было:
+    interface->set_volume(up_volume(1));
+но up_volume() сам вызывает set_volume(), который уже обновляет интерфейс.
+Убрана внешняя обёртка:
+    up_volume(1);   // всё делает сам
+
+4. BUF_SIZE (косметическое)
+-----------------------------
+Переименован в BUF_SIZE во избежание конфликта с макросом ALSA (хотя ALSA
+теперь не используется, переименование оставлено для порядка).
+
+5. Корректное перерисовывание при resize (SIGWINCH)
+----------------------------------------------------
+Проблема: при использовании dwm (и других тайлинговых WM) окно терминала
+изменяет размер. curses получает SIGWINCH и корректирует LINES/COLS,
+НО: select() с zero-timeout в get_ch() возвращает -1 (EINTR) или 0,
+getch() не вызывается, и KEY_RESIZE не читается. Экран остаётся
+с old-размером до первого нажатия клавиши.
+
+Было испробовано два подхода:
+
+  A) nodelay в get_ch() (ОТВЕРГНУТ — вызывает дикие лаги клавиатуры):
+     В get_ch() при select=0/-1 переключать stdscr в nodelay(TRUE),
+     вызывать getch() для чтения KEY_RESIZE из очереди curses,
+     затем nodelay(FALSE). Это привело к тому, что нажатия клавиш
+     перестали обрабатываться с первого раза (2-4 нажатия на одно
+     действие). Причина — лишние переключения nodelay() и вызовы
+     getch() в каждой idle-итерации основного цикла сбивают
+     curses-механизм обработки ввода.
+
+  B) SIGWINCH handler + флаг resize_pending (ТЕКУЩЕЕ РЕШЕНИЕ):
+     - Установлен SIGWINCH-обработчик on_sigwinch(), выставляющий
+       volatile sig_atomic_t resize_pending.
+     - В основном цикле play_list() флаг проверяется ДО вызова
+       get_ch(). Если флаг выставлен -> resize() -> ch = ERR.
+       Если нет -> нормальный опрос get_ch().
+     - Дополнительная проверка ch == KEY_RESIZE после get_ch()
+       (на случай, если curses сам вернул KEY_RESIZE).
+     - resize() использует ioctl(TIOCGWINSZ) + resizeterm()
+       для обновления LINES/COLS и внутренних структур curses
+       без выхода в shell (endwin()). UTF-8 и цвета сохраняются.
+     - get_ch() - оригинальный, без nodelay: select + getch или ERR.
+
+Файлы:
+  main.cc - resize_pending, on_sigwinch(), проверка флага и KEY_RESIZE
+  interface.cc - resize() через ioctl+resizeterm
+  interface.cc - get_ch() оригинальный (без nodelay)
+
+6. Скрытие курсора терминала
+-------------------------------
+curs_set(0) при старте (конструктор), curs_set(1) при выходе (деструктор).
+
+7. Прогресс-бар на строке сплиттера
+---------------------------------------
+Прогресс-бар рисуется НА строке-разделителе (lines-4) с помощью Unicode-символов
+через mvaddwstr():
+  - скобки `[`/`]` по краям
+  - заполненная часть: `●` (U+25CF)
+  - пустая часть: `○` (U+25CB)
+
+8. RC-файл
+------------
+volume=<0..100> в RC-файле поддерживается.
+Опция командной строки -V <0..100> работает.
+По умолчанию при старте: set_volume(100).

@@ -1,0 +1,199 @@
+playmp3list 0.99
+================
+
+1. OVERVIEW
+2. INSTALLATION
+3. USAGE
+4. DEFAULT CONTROL KEYS
+5. RC FILE EDITING
+6. CONTACT
+
+1. OVERVIEW
+-----------
+
+playmp3list is an ncurses-based MP3 player for Linux.
+Main features:
+
+o Displays a large scrollable playlist
+o Browse playlists, directories and 'virtual playlists', even while playing
+o Fully configurable key mappings and color schemes in a playmp3listrc file
+o Real-time toggling of shuffle / repeat modes
+o Instant jumps to one of 10 configurable directories/playlists
+o Standard player controls
+o PCM Volume changing
+o Unicode (UTF-8) support for tags, filenames and interface
+o Time elapsed, time remaining and song format displays
+o Modernised progress bar and playstate symbols
+o Optional ID3v1 / ID3v2 tag extraction in the playlist
+o Full / short (beautified) filename display in playlist
+o Command-line options to quickly override rc file settings
+o Uses mpg123 for decoding
+
+2. INSTALLATION
+---------------
+
+First of all, make sure that you have mpg123 installed correctly. Version 0.59r
+or higher is required. Get it working before proceeding. Take note of any
+unusual command-line parameters you need on your system, and add them to your
+rc file (chances are you will not need to) - see below.
+
+To build from source:
+
+tar zxvf playmp3list-0.99.tar.gz
+cd playmp3list-0.99
+make
+
+If that is successful, you'll probably want to run:
+
+sudo make install
+make clean
+
+NB!! Don't forget to copy the included playmp3listrc file as either
+~/.playmp3listrc or /etc/playmp3listrc, and customize it before running!
+
+If you use a non-standard ncurses installation (e.g. NetBSD curses),
+set the LIBS and CXXFLAGS variables accordingly:
+
+make LIBS="-L/usr/local/lib -lncurses" CXXFLAGS="-O2 -DNCURSES_WIDECHAR"
+
+Build options (CXXFLAGS):
+  -DNCURSES_WIDECHAR   Enable wide-character support for UTF-8 display
+  -DVERSION="\"0.99\"" Program version string (set in Makefile by default)
+
+3. USAGE
+--------
+
+Okay, use is really simple, just use one of the following:
+
+playmp3list [options] <playlist>
+playmp3list [options] <directory>
+playmp3list [options] <song> [<song>...]
+
+Type playmp3list without parameters to get a list of command-line options.
+You can press '?' or 'H' in the program to get a quick list of the default
+control keys!
+
+If you just want to start browsing (and playing) the current directory, try
+something like this:
+
+playmp3list -p .
+
+To extract and display ID3v1 tag info in the playlist, use the -i option.
+
+(Note: This may take a while, especially with a large playlist or directory,
+ but the program will run at full speed thereafter.)
+
+Note that the program will decide whether the file is a playlist if it has one
+of the following extensions: .m3u, .lst, .pls, .list, or the first line inside
+the file ends with the extension .mp3.
+
+You don't know how to make a playlist file?!?!
+Okay, either get a program to edit playlists (there are lots around), or
+make a shell script, with commands similar to this, which will generate a 
+playlist for you:
+
+find /mp3/ -iname *.mp3 > ~/playlist.m3u
+find /home/fubar/music/ -iname *.mp3 >> ~/playlist.m3u
+
+This will create the playlist ~/playlist.m3u with the path to all those
+mp3 files in it. Now, whenever you add/delete files, just run the script and
+your playlist will be up-to-date, or even automate the process with cron.
+
+Once you run the program, it will (hopefully) pop up with a nice window
+containing a standard scrollable list of files (your playlist) and a bar at
+the bottom with the song name, playback state, and more info. If mpg123 starts
+successfully, the message "Decoder `MPG123' started. (Press ? for list of
+default keys)." will appear in the bottom bar. This is a good sign it's
+probably all working.
+
+(Note: If you edited the rc file, and the screen is completely black, you
+ have probably corrupted the theme section, so restore it from the original
+ distfile - see below.)
+
+If you experience crashes or mysterious behaviour, enable debugging with the
+command-line option -d. All debug info will be sent to ~/playmp3list.debug.
+If necessary, mail this file together with a description of what happened.
+
+You can override the theme selection in the rc file by using the -T option.
+You can override the mpg123 parameters in the rc file with the -P option.
+If you notice excessive crackling in the audio, you may be running esd 
+(the Enlightenment Sound Daemon). Esd allows several applications to 
+play audio simultaneously, by mixing the audio streams in software. 
+This is unnecessary on, for example, a dedicated mp3 playing box or a 
+standard machine without X windows. You can disable esd by editing your 
+/etc/esd.conf file and setting auto_spawn=0.
+
+The program is controlled with the following default keys:
+
+4. DEFAULT CONTROL KEYS
+-----------------------
+
+Z / Y		Previous
+X		Play
+C		Pause
+V		Stop
+B / SPACE	Next
+LEFT / N	Rewind
+RIGHT / M	Fast-forward
+ENTER		Play highlighted song / browse hilighted directory or playlist
+UP, DN		Move up/down playlist
+PGUP, PGDN	Page up/down playlist
+HOME, END	Go to top/bottom of playlist
+S		Toggle shuffle mode
+R		Toggle repeat mode
+F		Toggle full/short filename display in playlist
+T		Toggle time elapsed/remaining display
+A		Toggle alphabetisation of playlist
+I		Display ID3v1 tag info (if present) of hilighted song
+< / -		Decrease volume by 1%
+> / +		Increase volume by 1%
+? / H		Display the default control keys
+/, ~		Jump to root or home directory
+BKSP		Jump to parent directory
+` <key>		Search for the next song starting with a letter
+^L / ^R		Redraw window
+Q		Quit
+
+If you want to customize the control keys, edit your ~/.playmp3listrc file:
+
+5. RC FILE EDITING
+------------------
+
+The ~/.playmp3listrc file can be edited to configure the program's key mappings,
+startup settings, color schemes (themes) and jumps. Use the supplied file as a
+starting point, as it contains all the function, setting and element names!
+
+Each keyboard mapping is defined in the format <function> <key> [<key>...],
+or in other words, the function name followed by a list of keys to be mapped
+to that function.
+
+Each setting is defined in the format <setting> <value>. You can supply
+additional command-line parameters to pass to mpg123, for example to set your
+sound device (-a <device>), force-to-mono (-m) etc. Edit the 'mpg123_params'
+setting and add them there. The 'theme' setting must be the name of the theme
+to use, as defined below. The jump_dir<n> settings are directory or playlist
+names that can be jumped to directly in the browser. Don't forget to set the
+jump key mappings as well (default keys are 1-0). The mpg123_priority setting
+is the priority to 're-nice' the mpg123 process to. It defaults to 0, but can
+be set anywhere from -20 (aggressive) to 20. The use_PCM setting specifies
+whether the PCM or Master channels should be used when setting volume.
+
+Each theme is a separate section, with the heading '.theme <theme_name>'.
+Each theme element is defined in the format <element> <fg> <bg> <attr>, where
+'fg' is the text color, 'bg' is the background color and attr is a text
+attribute.
+
+Themes can easily be shared with other people, so if you make a particularly
+good one, feel free to pass it around.
+
+6. CONTACT
+----------
+
+Project page: https://01.gg/playmp3list
+Current maintainer (0.99+): Pa Legba (legba@01.gg)
+
+7. ORIG
+-------
+
+Original author (0.1-0.95): Paul Urban (urban@rucus.ru.ac.za)
+Based on the playmp3list 0.95 of urban@rucus.ru.ac.za

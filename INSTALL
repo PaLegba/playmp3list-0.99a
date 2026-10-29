@@ -1,0 +1,31 @@
+Building and installing playmp3list
+====================================
+
+Requirements:
+  - mpg123 0.59r or later
+  - ncurses (wide-character support recommended for UTF-8)
+  - C++ compiler (g++ or clang++)
+  - GNU make
+
+Quick build:
+
+    make
+    sudo make install
+    make clean
+
+For NetBSD curses with UTF-8 support:
+
+    make LIBS="-L/usr/local/lib -lncurses" CXXFLAGS="-O2 -DNCURSES_WIDECHAR"
+
+Uninstall:
+
+    sudo make uninstall
+
+Configuration file:
+
+  cp playmp3listrc ~/.playmp3listrc
+  # or: sudo cp playmp3listrc /etc/playmp3listrc
+
+Build options (CXXFLAGS):
+  -DNCURSES_WIDECHAR    Wide-character mode (UTF-8 support)
+  -DVERSION="\"0.99\""  Version string (piped to --help)

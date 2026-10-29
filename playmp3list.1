@@ -1,0 +1,86 @@
+.TH playmp3list 1
+.SH NAME
+playmp3list - An ncurses-based mp3 player frontend to mpg123
+.SH SYNOPSIS
+\fBplaymp3list\fR [\fBoptions\fR] <\fBplaylist\fR>
+.br
+\fBplaymp3list\fR [\fBoptions\fR] <\fBdirectory\fR>
+.br
+\fBplaymp3list\fR [\fBoptions\fR] <\fBsong\fR> [<\fBsong\fR>...]
+.SH DESCRIPTION
+.I Playmp3list
+is an ncurses-based mp3 player that uses mpg123 to do decoding.
+Use it to browse playlists, directories and 'virtual playlists' even while playing. Features include fully configurable key mappings and color schemes, standard player controls via hot keys, time elapsed and song format displays and more.
+.SH OPTIONS
+.B -p
+	Auto start playing
+.br
+.B -s
+	Auto shuffle
+.br
+.B -r
+	Auto repeat
+.br
+.B -t
+	Display time remaining
+.br
+.B -a
+	Alphabetise playlist by filename (ignores path)
+.br
+.B -f
+	Display full path in playlist
+.br
+.B -i
+	Load ID3v1 tags on startup
+.br
+.B -d
+	Save debug info to ~/playmp3list.debug
+.br
+.B -T <x>
+        Use a particular theme
+.br
+.B -P <x>
+        Specify mpg123 parameters
+.br
+.B -N <x>
+        Specify mpg123 process priority
+.br
+.B -V <x>
+        Specify initial volume
+.br
+.SH RC FILES
+.I /etc/playmp3listrc
+.RS
+The system-wide configuration file
+.RE
+.I ~/.playmp3listrc
+.RS
+The per-user configuration file (overrides /etc/playmp3listrc if present)
+.RE
+.SH USAGE
+If you just want to start browsing from the current directory and sort the playlist in alphabetical order, try something like:
+.PP
+.B
+playmp3list -a .
+.PP
+Once you run the program it will (hopefully) pop up a nice window containing a
+standard scrollable list of files (your playlist) and a bar at the bottom with
+the song name, playback state, and more info. If mpg123 starts succesfully, a
+message \fI"Decoder 'MPG123' started. (Press ? for list of default keys)."\fR will
+appear in the bottom bar. This is a good sign it's probably all working.
+.PP
+Too see a list of the default control keys, press ? or H. These are the key
+mappings in use when no rc files exist, and correspond to the keys defined in
+the original rc file that is distributed with the program. If a user running
+playmp3list has a \fB~/.playmp3listrc\fR file, it will be used, otherwise the file
+\fB/etc/playmp3listrc\fR will be used. Edit whicheverer is applicable to specify your
+own key mappings, change startup settings, edit and choose color schemes
+(themes) and specify jump directories. See \fBREADME\fR for more...
+.SH BUGS
+If you experience crashes or mysterious behaviour, enable debugging with the
+-d option. All debug messages will be sent to ~/playmp3list.debug. If
+necessary, mail this file to me, together with a description of what happened.
+.SH AUTHOR
+Paul Urban <urban@rucus.ru.ac.za>
+.SH SEE ALSO
+.BR mpg123 (1), renice (8)

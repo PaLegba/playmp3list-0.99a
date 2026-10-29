@@ -1,0 +1,18 @@
+Project of Pa Legba (legba@01.gg)
+
+Thanks goes to these people...
+
+Author of the original playmp3list, Paul Urban (urban@rucus.ru.ac.za) for his work. You are sounded my Y2Ks, bro!
+Bram Avontuur (brama@stack.nl), for quite a bit of code from `mp3blaster';
+Zweli Bam (zweli@rucus.ru.ac.za), for his getopt stuff and a bugreport;
+Arndt Schoenewald (arndt@schoenewald.de), who suggested pop-up help, jump keys, and improved alphabetisation;
+Pierre Lombard (plb@n2.com), who contributed ID3v1 tag extraction code and bugfixes;
+Hugues Marilleau (huge@speedball.medisite.net), who suggested rc file support and refresh key-mapping;
+Frank de Lange (frank@unternet.org), who contributed a small mpegsound patch;
+Patrick (lugpag@gmx.net), who contributed more intelligent playlist recognising code;
+Daniel Rogers (iidan@ccwf.cc.utexas.edu), who contributed rpm-type stuff;
+Dennis (), who pointed out some bugs and suggested proper symlink support;
+Marcin Marszalek (azzie@staszic.waw.pl), who contributed user-configurable jump code, suggested an improved alphabetisation method, the ability to re-nice mpg123, a patch for searching in the playlist and accelerated fast-forwarding;
+Alexey Semenov <swajj@yahoo.com>, who added tag-rewriting which helps with russian music in early years.
+
+...and anyone else I've forgot to mention!
